@@ -5,6 +5,7 @@ gemspec
 gem 'wasabi'
 gem 'savon', '>= 2.0.0'
 gem 'httpi', :git => 'git://github.com/savonrb/httpi.git'
+gem 'nori', :git => 'https://github.com/Drachenfels-GmbH/nori.git', :branch => 'improved_typecasting'
 
 gem 'rspec-rails'
 gem 'guard'

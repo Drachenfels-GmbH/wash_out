@@ -12,14 +12,17 @@ module WashOut
 
     # This filter parses the SOAP request and puts it into +params+ array.
     def _parse_soap_parameters
+      xml = request.body.read
+      type_converter = Nori::DEFAULT_TYPE_CONVERTER.tap {|c| c.detect_namespace_prefixes!(xml)}
       parser = Nori.new(
         :parser => WashOut::Engine.parser,
         :strip_namespaces => true,
         :advanced_typecasting => true,
+        :type_converter => type_converter,
         :convert_tags_to => ( WashOut::Engine.snakecase_input ? lambda { |tag| tag.snakecase.to_sym } \
                                 : lambda { |tag| tag.to_sym } ))
 
-      @_params = parser.parse(request.body.read)
+      @_params = parser.parse(xml)
       references = WashOut::Dispatcher.deep_select(@_params){|k,v| v.is_a?(Hash) && v.has_key?(:@id)}
 
       unless references.blank?
